@@ -17,15 +17,11 @@
 #include "memfd.h"
 
 #include <errno.h>
-#if !defined(HAS_MEMFD_BACKPORT)
 #include <stdio.h>
-#endif
 #if !defined(_WIN32)
 #include <fcntl.h>
 #include <sys/syscall.h>
-#if !defined(HAS_MEMFD_BACKPORT)
 #include <sys/utsname.h>
-#endif
 #include <unistd.h>
 #endif
 #if defined(__BIONIC__)
@@ -53,7 +49,7 @@ namespace art {
 #if defined(__NR_memfd_create)
 
 int memfd_create(const char* name, unsigned int flags) {
-#if !defined(HAS_MEMFD_BACKPORT)
+#if 0
   // Check kernel version supports memfd_create(). Some older kernels segfault executing
   // memfd_create() rather than returning ENOSYS (b/116769556).
   static constexpr int kRequiredMajor = 3;
@@ -67,8 +63,8 @@ int memfd_create(const char* name, unsigned int flags) {
     errno = ENOSYS;
     return -1;
   }
-#endif
 
+#endif
   return syscall(__NR_memfd_create, name, flags);
 }
 
